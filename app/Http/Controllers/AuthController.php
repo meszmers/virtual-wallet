@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // todo need to implement correct auth handling from api: Not working corectly
-class AuthController
+class AuthController extends Controller
 {
     private string $authApi = "http://localhost/api/auth/";
 

@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class UserController
+class UserController extends WalletController
 {
 
     private EloquentUserRepository $userRepository;

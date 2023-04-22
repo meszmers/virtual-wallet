@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\Controller;
 use App\Repositories\User\EloquentUserRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends WalletController
+class UserController extends Controller
 {
 
     private EloquentUserRepository $userRepository;

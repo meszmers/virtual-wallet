@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('wallets', function (Blueprint $table) {
-            $table->string('id')->unique();
+            $table->id();
+            $table->string('wallet_number')->unique();
             $table->bigInteger('user_id');
-            $table->bigInteger('card_name');
+            $table->string('card_name');
             $table->timestamp('created_at');
+            $table->timestamp('updated_at');
         });
     }
 

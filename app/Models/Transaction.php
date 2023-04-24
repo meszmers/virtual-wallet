@@ -21,7 +21,8 @@ class Transaction extends Model
         'user_id',
         'amount',
         'currency_id',
-        'wallet_number'
+        'wallet_number',
+        'to_wallet_number'
     ];
 
 

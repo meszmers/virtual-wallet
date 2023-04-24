@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Wallet\EloquentWalletRepository;
+use App\Services\TransactionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,10 +13,16 @@ class WalletController extends Controller
 {
 
     private EloquentWalletRepository $walletRepository;
+    private TransactionsService $transactionsService;
 
-    public function __construct(EloquentWalletRepository $walletRepository)
+    /**
+     * @param EloquentWalletRepository $walletRepository
+     * @param TransactionsService $transactionsService
+     */
+    public function __construct(EloquentWalletRepository $walletRepository, TransactionsService $transactionsService)
     {
         $this->walletRepository = $walletRepository;
+        $this->transactionsService = $transactionsService;
     }
 
     /**
@@ -23,7 +30,13 @@ class WalletController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json($this->walletRepository->index(Auth::id()));
+        $data = $this->walletRepository->index(Auth::id());
+
+        foreach ($data as &$wallet) {
+            $wallet['balance'] = $this->transactionsService->getWalletTotalBalanceOfEachCurrency($wallet['wallet_number']);
+        }
+
+        return response()->json($data);
     }
 
     /**
@@ -32,7 +45,10 @@ class WalletController extends Controller
      */
     public function show(string $walletNumber): JsonResponse
     {
-        return response()->json($this->walletRepository->show(Auth::id(), $walletNumber));
+        $wallet = $this->walletRepository->show(Auth::id(), $walletNumber);
+        $wallet['balance'] = $this->transactionsService->getWalletTotalBalanceOfEachCurrency($walletNumber);
+
+        return response()->json($wallet);
     }
 
     /**

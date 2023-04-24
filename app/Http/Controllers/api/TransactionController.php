@@ -5,8 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Repositories\Transaction\EloquentTransactionRepository;
 use App\Services\CurrenciesService;
-use http\Env\Response;
-use Illuminate\Http\JsonResponse;
+use App\Services\TransactionsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,14 +13,18 @@ class TransactionController extends Controller
 {
     private EloquentTransactionRepository $transactionRepository;
     private CurrenciesService $currenciesService;
+    private TransactionsService $transactionsService;
 
     /**
      * @param EloquentTransactionRepository $transactionRepository
+     * @param CurrenciesService $currenciesService
+     * @param TransactionsService $transactionsService
      */
-    public function __construct(EloquentTransactionRepository $transactionRepository, CurrenciesService $currenciesService)
+    public function __construct(EloquentTransactionRepository $transactionRepository, CurrenciesService $currenciesService, TransactionsService $transactionsService)
     {
         $this->transactionRepository = $transactionRepository;
         $this->currenciesService = $currenciesService;
+        $this->transactionsService = $transactionsService;
     }
 
     public function index(string $walletNumber)
@@ -46,8 +49,25 @@ class TransactionController extends Controller
 
         $walletTo = !empty($fields['to_wallet_number']) ? $fields['to_wallet_number'] : null;
 
-        $transaction = $this->transactionRepository->create($walletNumber, $fields['amount'], $fields['currency_id'],$walletTo);
+        $transactionValid = $this->transactionsService->isTransactionValid(
+            Auth::id(),
+            $walletNumber,
+            $fields['amount'],
+            $fields['currency_code'],
+            $walletTo
+        );
 
-        return response()->json($transaction);
+        if ($transactionValid) {
+            $transaction = $this->transactionRepository->create(
+                $walletNumber,
+                $fields['amount'],
+                $fields['currency_id'],
+                $walletTo
+            );
+            return response()->json($transaction);
+        }
+
+
+        return response()->json(['message' => 'Transaction unsuccessful.']);
     }
 }

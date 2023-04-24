@@ -15,4 +15,12 @@ class CurrenciesService
     {
         return !!Currency::where([['id', $currencyId], ['currency_code', $currencyCode]])->first();
     }
+
+    /**
+     * @return array
+     */
+    public function getCurrencies(): array
+    {
+        return Currency::all()->toArray();
+    }
 }

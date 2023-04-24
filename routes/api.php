@@ -24,6 +24,7 @@ Route::post('/auth/register', [UserController::class, 'register']);
 // Protected Routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/auth/logout', [UserController::class, 'logout']);
+    Route::post('/auth/check', [UserController::class, 'check']);
 
     Route::group(['prefix' => 'user'], function () {
 

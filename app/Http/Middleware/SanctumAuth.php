@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,29 +15,23 @@ class SanctumAuth
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+
+    // Todo need to fix request to take Auth token
     public function handle(Request $request, Closure $next): Response
     {
-        if (!empty(session()->get('u-token'))) {
+        if ($request->session()->has('u-token')) {
 
-            // todo need to fix that this request checks set token and return if that token is valid.
-            // todo Currntly not working request
-//            $req = Request::create('/api/user', 'GET');
-//            $req->headers->set('Authorization', 'Bearer '.session()->get('u-token'));
-//            $req->headers->set('Accept', 'application/json');
-//
-//
-//            dd($req);
-//
-//            $response = Route::dispatch($req);
-//            var_dump(auth('sanctum')->check());
-//            var_dump($req->headers);
-//            dd($response);
-//
-//            if (!empty($response['message']) && $response['message'] === 'Unauthenticated.') {
-//                session()->invalidate();
-//
-//                return redirect('login');
-//            }
+            $req = Request::create('/api/auth/check', 'POST');
+            $req->headers->set('Authorization', 'Bearer '.$request->session()->get('u-token'));
+            $req->headers->set('Accept', 'application/json');
+
+            $response = Route::dispatch($req)->getOriginalContent();
+
+            if (!empty($response['message']) && $response['message'] === 'Unauthenticated.') {
+                session()->invalidate();
+
+                return redirect('login');
+            }
 
             return $next($request);
         }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\TransactionController;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\WalletController;
 use Illuminate\Http\Request;
@@ -33,9 +34,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::group(['prefix' => 'wallets'], function () {
             Route::get('/', [WalletController::class, 'index']);
             Route::post('/', [WalletController::class, 'create']);
-            Route::get('/{walletId}', [WalletController::class, 'show']);
-            Route::put('/{walletId}', [WalletController::class, 'update']);
-            Route::delete('/{walletId}', [WalletController::class, 'delete']);
+            Route::get('/{walletNumber}', [WalletController::class, 'show']);
+            Route::put('/{walletNumber}', [WalletController::class, 'update']);
+            Route::delete('/{walletNumber}', [WalletController::class, 'delete']);
+
+            Route::group(['prefix' => '/{walletNumber}/transactions'], function () {
+                Route::get('/', [TransactionController::class, 'index']);
+
+                Route::post('/', [TransactionController::class, 'create']);
+            });
         });
 
     });

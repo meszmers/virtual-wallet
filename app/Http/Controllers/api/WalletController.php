@@ -27,12 +27,12 @@ class WalletController extends Controller
     }
 
     /**
-     * @param int $walletId
+     * @param string $walletNumber
      * @return JsonResponse
      */
-    public function show(int $walletId): JsonResponse
+    public function show(string $walletNumber): JsonResponse
     {
-        return response()->json($this->walletRepository->show(Auth::id(), $walletId));
+        return response()->json($this->walletRepository->show(Auth::id(), $walletNumber));
     }
 
     /**
@@ -50,22 +50,22 @@ class WalletController extends Controller
     }
 
     /**
-     * @param int $walletId
+     * @param string $walletNumber
      * @return JsonResponse
      */
-    public function delete(int $walletId): JsonResponse
+    public function delete(string $walletNumber): JsonResponse
     {
-        $this->walletRepository->delete(Auth::id(), $walletId);
+        $this->walletRepository->delete(Auth::id(), $walletNumber);
 
-        return response()->json(['message' => "Wallet with id: $walletId has been deleted"]);
+        return response()->json(['message' => "Wallet with number: $walletNumber has been deleted"]);
     }
 
     /**
      * @param Request $request
-     * @param int $walletId
+     * @param string $walletNumber
      * @return JsonResponse
      */
-    public function update(Request $request, int $walletId): JsonResponse
+    public function update(Request $request, string $walletNumber): JsonResponse
     {
         $fields = $request->validate([
             'cardName' => 'required|string',
@@ -73,7 +73,7 @@ class WalletController extends Controller
 
         return response()->json(
             $this->walletRepository
-                ->update(Auth::id(), $walletId, $fields['cardName']) ?: ['message' => 'Cant update this wallet.']
+                ->update(Auth::id(), $walletNumber, $fields['cardName']) ?: ['message' => 'Cant update this wallet.']
         );
     }
 }

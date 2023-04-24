@@ -10,35 +10,35 @@ interface WalletRepository
      * @param int $userId
      * @return mixed
      */
-    public function index(int $userId);
+    public function index(int $userId): mixed;
 
     /**
      * @param int $userId
-     * @param int $walletId
-     * @return Wallet
+     * @param string $walletNumber
+     * @return ?Wallet
      */
-    public function show(int $userId, int $walletId): Wallet;
+    public function show(int $userId, string $walletNumber): ?Wallet;
 
     /**
      * @param int $userId
      * @param string $cardName
-     * @return Wallet
+     * @return ?Wallet
      */
     public function create(int $userId, string $cardName): ?Wallet;
 
     /**
      * @param int $userId
-     * @param int $walletId
+     * @param string $walletNumber
      * @return mixed
      */
-    public function delete(int $userId, int $walletId);
+    public function delete(int $userId, string $walletNumber);
 
     /**
      * @param int $userId
-     * @param int $walletId
+     * @param string $walletNumber
      * @param string $newName
      * @return ?Wallet
      */
-    public function update(int $userId, int $walletId, string $newName): ?Wallet;
+    public function update(int $userId, string $walletNumber, string $newName): ?Wallet;
 
 }

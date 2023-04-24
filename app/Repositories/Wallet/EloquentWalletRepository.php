@@ -12,7 +12,7 @@ class EloquentWalletRepository implements WalletRepository
      * @param int $userId
      * @return mixed
      */
-    public function index(int $userId)
+    public function index(int $userId): mixed
     {
         return Wallet::where('user_id', $userId)->paginate();
     }
@@ -20,12 +20,12 @@ class EloquentWalletRepository implements WalletRepository
     /**
      * @param int $userId
      * @param int $walletId
-     * @return Wallet
+     * @return ?Wallet
      */
-    public function show(int $userId, int $walletId): Wallet
+    public function show(int $userId, string $walletNumber): ?Wallet
     {
         return Wallet::where([
-            ['id', $walletId],
+            ['wallet_number', $walletNumber],
             ['user_id', $userId]
         ])->first();
     }
@@ -49,27 +49,27 @@ class EloquentWalletRepository implements WalletRepository
 
     /**
      * @param int $userId
-     * @param int $walletId
+     * @param string $walletNumber
      * @return void
      */
-    public function delete(int $userId, int $walletId)
+    public function delete(int $userId, string $walletNumber)
     {
         Wallet::where([
-            ['id', $walletId],
+            ['wallet_number', $walletNumber],
             ['user_id', $userId]
         ])->first()->delete();
     }
 
     /**
      * @param int $userId
-     * @param int $walletId
+     * @param string $walletNumber
      * @param string $newName
      * @return ?Wallet
      */
-    public function update(int $userId, int $walletId, string $newName): ?Wallet
+    public function update(int $userId, string $walletNumber, string $newName): ?Wallet
     {
         $wallet = Wallet::where([
-            'id' => $walletId,
+            'wallet_number' => $walletNumber,
             'user_id' => $userId,
         ])->first();
 

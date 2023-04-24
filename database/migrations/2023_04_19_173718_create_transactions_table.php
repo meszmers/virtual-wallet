@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('wallet_id');
+            $table->string('wallet_number');
             $table->float('amount');
+            $table->string('to_wallet_number')->nullable();
             $table->string('currency_id');
             $table->timestamp('created_at');
+            $table->timestamp('updated_at');
         });
     }
 
